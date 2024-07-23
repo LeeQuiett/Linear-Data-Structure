@@ -4,7 +4,7 @@ typedef struct USERDATA {
 	int age;
 	char name[32];
 	char phone[32];
-	struct USERDATA* pUserData;
+	struct USERDATA* pNext;
 } USERDATA;
 
 int main(void) {
@@ -15,16 +15,16 @@ int main(void) {
 		{12, "Hecop", "010-1234-5678", NULL},
 	};
 
-	user[0].pUserData = &user[1];
-	user[1].pUserData = &user[2];
-	user[2].pUserData = &user[3];
+	user[0].pNext = &user[1];
+	user[1].pNext = &user[2];
+	user[2].pNext = &user[3];
 	
 	USERDATA* pUser = &user[0];
 
 	while (pUser != NULL)
 	{
-		printf("age: %d, name: %s, phone: %s\n", pUser->age, pUser->name, pUser->phone);
-		pUser = pUser->pUserData;
+		printf("addr: [%p], age: %d, name: %s, phone: %s\n",pUser, pUser->age, pUser->name, pUser->phone);
+		pUser = pUser->pNext;
 	}
 	
 }
