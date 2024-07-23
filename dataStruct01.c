@@ -19,6 +19,12 @@ int main(void) {
 	user[1].pUserData = &user[2];
 	user[2].pUserData = &user[3];
 	
-	printf("%s\n", user[0].pUserData->name);
+	USERDATA* pUser = &user[0];
+
+	while (pUser != NULL)
+	{
+		printf("age: %d, name: %s, phone: %s\n", pUser->age, pUser->name, pUser->phone);
+		pUser = pUser->pUserData;
+	}
 	
 }
