@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 typedef struct USERDATA {
 	int age;
@@ -6,6 +7,24 @@ typedef struct USERDATA {
 	char phone[32];
 	struct USERDATA* pNext;
 } USERDATA;
+
+void loadList() {
+	puts("=====loadList=====");
+
+	FILE* fp = NULL;
+	fopen_s(&fp, "listData.dat", "rb");
+	if (fp == NULL) {
+		perror("ERROR: Failed to open listData.dat");
+		return 1;
+	}
+
+	USERDATA user = { 0 };
+	while (fread(&user, sizeof(USERDATA), 1, fp) > 0) {
+		printf("addr: [%p], age: %d, name: %s, phone: %s\n", &user, user.age, user.name, user.phone);
+		memset(&user, 0, sizeof(USERDATA));
+	}
+	fclose(fp);
+}
 
 int main(void) {
 	USERDATA user[4] = {
@@ -26,5 +45,22 @@ int main(void) {
 		printf("addr: [%p], age: %d, name: %s, phone: %s\n",pUser, pUser->age, pUser->name, pUser->phone);
 		pUser = pUser->pNext;
 	}
-	
-}
+
+	FILE* fp = NULL;
+	fopen_s(&fp, "listData.dat", "wb");
+	if (fp == NULL) {
+		perror("ERROR: Failed to open listData.dat");
+		return 1;
+	}
+
+	pUser = &user[0];
+	while (pUser != NULL) {
+		fwrite(pUser, sizeof(USERDATA), 1, fp);
+		pUser = pUser->pNext;
+	}
+	fclose(fp);
+
+	loadList();
+
+	return 0;
+} 
